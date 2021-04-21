@@ -36,7 +36,7 @@ jwt = JWTManager(app)
 
 
 @jwt.token_in_blocklist_loader
-def check_if_token_in_blocklist(decrypted_token):
+def check_if_token_in_blocklist(header, decrypted_token):
     return decrypted_token['jti'] in BLOCKLIST
 
 
