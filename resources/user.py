@@ -3,13 +3,12 @@ from werkzeug.security import safe_str_cmp
 from flask_jwt_extended import (
     create_access_token,
     create_refresh_token,
-    jwt_refresh_token_required,
     get_jwt_identity,
     jwt_required,
-    get_raw_jwt,
+    get_jwt,
 )
 from models.user import UserModel
-from blacklist import BLACKLIST
+from blocklist import BLOCKLIST
 
 USERNAME_ALREADY_EXISTS = 'A user with that username already exists.'
 BLANK_ERROR = '"{field}" cannot be left blank.'
@@ -88,11 +87,11 @@ class UserLogin(Resource):
 
 class UserLogout(Resource):
     @classmethod
-    @jwt_required
+    @jwt_required()
     def post(cls):
-        jti = get_raw_jwt()['jti']
+        jti = get_jwt()['jti']
         user_id = get_jwt_identity()
-        BLACKLIST.add(jti)
+        BLOCKLIST.add(jti)
         return {
             'message': USER_LOGGED_OUT.format(id=user_id),
         }, 200
@@ -100,7 +99,7 @@ class UserLogout(Resource):
 
 class TokenRefresh(Resource):
     @classmethod
-    @jwt_refresh_token_required
+    @jwt_required(fresh=True)
     def post(cls):
         current_user = get_jwt_identity()
         new_token = create_access_token(identity=current_user, fresh=False)
