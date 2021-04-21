@@ -4,7 +4,13 @@ from flask_jwt_extended import JWTManager
 
 from db import db
 from blacklist import BLACKLIST
-from resources.user import UserRegister, UserLogin, User, TokenRefresh, UserLogout
+from resources.user import (
+    UserRegister,
+    UserLogin,
+    User,
+    TokenRefresh,
+    UserLogout,
+)
 from resources.item import Item, ItemList
 from resources.store import Store, StoreList
 
@@ -31,9 +37,7 @@ jwt = JWTManager(app)
 
 @jwt.token_in_blacklist_loader
 def check_if_token_in_blacklist(decrypted_token):
-    return (
-        decrypted_token['jti'] in BLACKLIST
-    )
+    return decrypted_token['jti'] in BLACKLIST
 
 
 api.add_resource(Store, '/store/<string:name>')
