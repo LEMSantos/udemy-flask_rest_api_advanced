@@ -1,3 +1,4 @@
+import traceback
 from flask import request, make_response, render_template
 from flask_restful import Resource
 from werkzeug.security import safe_str_cmp
@@ -13,15 +14,21 @@ from models.user import UserModel
 from blocklist import BLOCKLIST
 
 USERNAME_ALREADY_EXISTS = 'A user with that username already exists.'
+EMAIL_ALREADY_EXISTS = 'A user with that email already exists.'
 USER_NOT_FOUND = 'User not found.'
 USER_DELETED = 'User deleted.'
-USER_CREATED = 'User created successfully.'
 INVALID_CREDENTIALS = 'Invalid credentials.'
 USER_LOGGED_OUT = 'User <id={id}> successfully logged out.'
 NOT_CONFIRMED_ERROR = (
     'You have not confirmed registration, please check your email <{}>.'
 )
 USER_CONFIRMED = 'User confirmed.'
+FAILED_TO_CREATE = 'Internal server error. Failed to create user.'
+SUCCESS_REGISTER_MESSAGE = (
+    'Account created successfully, an email with an '
+    'activation link has been sent to your email '
+    'address. please check.'
+)
 
 user_schema = UserSchema()
 
@@ -37,9 +44,19 @@ class UserRegister(Resource):
                 'message': USERNAME_ALREADY_EXISTS,
             }, 400
 
-        user.save_to_db()
+        if UserModel.find_by_email(user.email):
+            return {
+                'message': EMAIL_ALREADY_EXISTS,
+            }, 400
 
-        return {'message': USER_CREATED}, 201
+        try:
+            user.save_to_db()
+            user.send_confirmation_email()
+
+            return {'message': SUCCESS_REGISTER_MESSAGE}, 201
+        except:
+            traceback.print_exec()
+            return {'message': FAILED_TO_CREATE}, 500
 
 
 class User(Resource):
@@ -63,7 +80,7 @@ class UserLogin(Resource):
     @classmethod
     def post(cls):
         user_json = request.get_json()
-        user_data = user_schema.load(user_json)
+        user_data = user_schema.load(user_json, partial=('email',))
 
         user = UserModel.find_by_username(user_data.username)
 
@@ -79,7 +96,7 @@ class UserLogin(Resource):
                     'refresh_token': refresh_token,
                 }, 200
 
-            return {'message': NOT_CONFIRMED_ERROR.format(user.username)}, 400
+            return {'message': NOT_CONFIRMED_ERROR.format(user.email)}, 400
 
         return {'message': INVALID_CREDENTIALS}, 401
 
@@ -119,7 +136,7 @@ class UserConfirm(Resource):
         headers = {'Content-Type': 'text/html'}
 
         return make_response(
-            render_template('confirmation_page.html', email=user.username),
+            render_template('confirmation_page.html', email=user.email),
             200,
             headers,
         )
