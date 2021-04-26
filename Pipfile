@@ -12,6 +12,7 @@ Flask-SQLAlchemy = "==2.5.1"
 marshmallow = "==3.11.1"
 flask-marshmallow = "==0.14.0"
 marshmallow-sqlalchemy = "==0.24.2"
+requests = "==2.25.1"
 
 [dev-packages]
 
