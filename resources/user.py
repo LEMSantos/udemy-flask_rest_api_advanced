@@ -12,6 +12,7 @@ from flask_jwt_extended import (
 from schemas.user import UserSchema
 from models.user import UserModel
 from blocklist import BLOCKLIST
+from libs.mailgun import MailGunException
 
 USERNAME_ALREADY_EXISTS = 'A user with that username already exists.'
 EMAIL_ALREADY_EXISTS = 'A user with that email already exists.'
@@ -54,6 +55,9 @@ class UserRegister(Resource):
             user.send_confirmation_email()
 
             return {'message': SUCCESS_REGISTER_MESSAGE}, 201
+        except MailGunException as e:
+            user.delete_from_db()
+            return {'message': str(e)}, 500
         except:
             traceback.print_exec()
             return {'message': FAILED_TO_CREATE}, 500
