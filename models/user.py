@@ -23,7 +23,7 @@ class UserModel(db.Model):
     @property
     def most_recent_confirmation(self) -> 'ConfirmationModel':
         return self.confirmation.order_by(
-            db.desc(ConfirmationModel.expire_At)
+            db.desc(ConfirmationModel.expire_at)
         ).first()
 
     @classmethod
