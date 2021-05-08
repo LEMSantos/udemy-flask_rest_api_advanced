@@ -18,7 +18,7 @@ from resources.user import (
 from resources.item import Item, ItemList
 from resources.store import Store, StoreList
 from resources.confirmation import Confirmation, ConfirmationByUser
-from resources.image import ImageUpload, Image
+from resources.image import ImageUpload, Image, AvatarUpload
 from libs.image_helper import IMAGE_SET
 
 app = Flask(__name__)
@@ -60,6 +60,7 @@ api.add_resource(UserLogout, '/logout')
 api.add_resource(Confirmation, '/user_confirmation/<string:confirmation_id>')
 api.add_resource(ConfirmationByUser, '/confirmation/user/<int:user_id>')
 api.add_resource(ImageUpload, '/upload/image')
+api.add_resource(AvatarUpload, '/upload/avatar')
 api.add_resource(Image, '/image/<string:filename>')
 
 if __name__ == '__main__':
