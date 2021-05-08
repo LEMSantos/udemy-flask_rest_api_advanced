@@ -25,5 +25,9 @@
   "user_error_creating": "Internal server error. Failed to create user.",
   "user_registered": "Account created successfully, an email with an activation link has been sent to your email address, please check.",
   "image_uploaded": "Image {basename} uploaded.",
-  "image_illegal_extension": "Extension '{extension}' is not allowed."
+  "image_illegal_extension": "Extension '{extension}' is not allowed.",
+  "image_illegal_file_name": "Illegal file name '{filename}' requested.",
+  "image_not_found": "Image '{filename}' not found.",
+  "image_deleted": "Image '{filename}' deleted.",
+  "image_delete_failed": "Internal server error! Failed to delete image."
 }
