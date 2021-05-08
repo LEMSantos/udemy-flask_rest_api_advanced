@@ -132,3 +132,4 @@ dmypy.json
 data.db
 
 .vscode
+static/images/user_*
