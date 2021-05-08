@@ -16,6 +16,7 @@ requests = "==2.25.1"
 python-dotenv = "==0.17.0"
 flask-uploads = "==0.2.1"
 werkzeug = "==0.16.0"
+psycopg2 = "==2.8.6"
 
 [dev-packages]
 
