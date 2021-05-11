@@ -6,6 +6,8 @@ from flask_migrate import Migrate
 from marshmallow import ValidationError
 from flask_uploads import configure_uploads, patch_request_class
 
+load_dotenv('.env', verbose=True)
+
 from ma import ma
 from db import db
 from oa import oauth
@@ -21,10 +23,11 @@ from resources.item import Item, ItemList
 from resources.store import Store, StoreList
 from resources.confirmation import Confirmation, ConfirmationByUser
 from resources.image import ImageUpload, Image, AvatarUpload, Avatar
+from resources.github_login import GithubLogin
 from libs.image_helper import IMAGE_SET
 
 app = Flask(__name__)
-load_dotenv('.env', verbose=True)
+
 app.config.from_object('default_config')
 app.config.from_envvar('APPLICATION_SETTINGS')
 patch_request_class(app, 10 * 1024 * 1024)  # 10MB max size upload
@@ -66,6 +69,7 @@ api.add_resource(ImageUpload, '/upload/image')
 api.add_resource(AvatarUpload, '/upload/avatar')
 api.add_resource(Image, '/image/<string:filename>')
 api.add_resource(Avatar, '/avatar/<int:user_id>')
+api.add_resource(GithubLogin, '/login/github')
 
 db.init_app(app)
 ma.init_app(app)
