@@ -23,7 +23,7 @@ from resources.item import Item, ItemList
 from resources.store import Store, StoreList
 from resources.confirmation import Confirmation, ConfirmationByUser
 from resources.image import ImageUpload, Image, AvatarUpload, Avatar
-from resources.github_login import GithubLogin
+from resources.github_login import GithubLogin, GithubAuthorize
 from libs.image_helper import IMAGE_SET
 
 app = Flask(__name__)
@@ -70,6 +70,7 @@ api.add_resource(AvatarUpload, '/upload/avatar')
 api.add_resource(Image, '/image/<string:filename>')
 api.add_resource(Avatar, '/avatar/<int:user_id>')
 api.add_resource(GithubLogin, '/login/github')
+api.add_resource(GithubAuthorize, '/login/github/authorized')
 
 db.init_app(app)
 ma.init_app(app)
