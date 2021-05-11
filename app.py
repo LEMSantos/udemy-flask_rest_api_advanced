@@ -8,6 +8,7 @@ from flask_uploads import configure_uploads, patch_request_class
 
 from ma import ma
 from db import db
+from oa import oauth
 from blocklist import BLOCKLIST
 from resources.user import (
     UserRegister,
@@ -68,6 +69,7 @@ api.add_resource(Avatar, '/avatar/<int:user_id>')
 
 db.init_app(app)
 ma.init_app(app)
+oauth.init_app(app)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
