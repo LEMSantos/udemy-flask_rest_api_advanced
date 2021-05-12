@@ -118,3 +118,20 @@ class TokenRefresh(Resource):
         current_user = get_jwt_identity()
         new_token = create_access_token(identity=current_user, fresh=False)
         return {'access_token': new_token}, 200
+
+
+class SetPassword(Resource):
+    @classmethod
+    @jwt_required(fresh=True)
+    def post(cls):
+        user_json = request.get_json()
+        user_data = user_schema.load(user_json)
+        user = UserModel.find_by_username(user_data.username)
+
+        if not user:
+            return {'message': gettext('user_not_found')}, 404
+
+        user.password = user_data.password
+        user.save_to_db()
+
+        return {'message': gettext('user_password_updated')}, 200
