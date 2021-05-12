@@ -74,7 +74,11 @@ class UserLogin(Resource):
 
         user = UserModel.find_by_username(user_data.username)
 
-        if user and safe_str_cmp(user.password, user_data.password):
+        if (
+            user
+            and user.password
+            and safe_str_cmp(user.password, user_data.password)
+        ):
             confirmation = user.most_recent_confirmation
 
             if confirmation and confirmation.confirmed:
