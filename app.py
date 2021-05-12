@@ -18,6 +18,7 @@ from resources.user import (
     User,
     TokenRefresh,
     UserLogout,
+    SetPassword,
 )
 from resources.item import Item, ItemList
 from resources.store import Store, StoreList
@@ -71,6 +72,7 @@ api.add_resource(Image, '/image/<string:filename>')
 api.add_resource(Avatar, '/avatar/<int:user_id>')
 api.add_resource(GithubLogin, '/login/github')
 api.add_resource(GithubAuthorize, '/login/github/authorized')
+api.add_resource(SetPassword, '/user/password')
 
 db.init_app(app)
 ma.init_app(app)
