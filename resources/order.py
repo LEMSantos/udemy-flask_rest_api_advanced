@@ -37,7 +37,7 @@ class Order(Resource):
         order.save_to_db()  # this does not submit to Stripe
 
         order.set_status('failed')
-        # order.charge_with_stripe(data['token'])
+        order.charge_with_stripe(data['token'])
         order.set_status('complete')
 
         return order_schema.dump(order)
