@@ -1,6 +1,7 @@
 from collections import Counter
 from flask_restful import Resource
 from flask import request
+from stripe import error
 
 from libs.strings import gettext
 from models.item import ItemModel
@@ -36,8 +37,24 @@ class Order(Resource):
         order = OrderModel(items=items, status='pending')
         order.save_to_db()  # this does not submit to Stripe
 
+        try:
         order.set_status('failed')
         order.charge_with_stripe(data['token'])
         order.set_status('complete')
 
         return order_schema.dump(order)
+        except error.CardError as e:
+            return e.json_body, e.http_status
+        except error.RateLimitError as e:
+            return e.json_body, e.http_status
+        except error.InvalidRequestError as e:
+            return e.json_body, e.http_status
+        except error.AuthenticationError as e:
+            return e.json_body, e.http_status
+        except error.APIConnectionError as e:
+            return e.json_body, e.http_status
+        except error.StripeError as e:
+            return e.json_body, e.http_status
+        except Exception as e:
+            print(e)
+            return {'message': gettext('order_error')}, 500
