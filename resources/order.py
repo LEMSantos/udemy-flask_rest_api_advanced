@@ -5,6 +5,9 @@ from flask import request
 from libs.strings import gettext
 from models.item import ItemModel
 from models.order import OrderModel, ItemsInOrder
+from schemas.order import OrderSchema
+
+order_schema = OrderSchema()
 
 
 class Order(Resource):
@@ -32,3 +35,9 @@ class Order(Resource):
 
         order = OrderModel(items=items, status='pending')
         order.save_to_db()  # this does not submit to Stripe
+
+        order.set_status('failed')
+        # order.charge_with_stripe(data['token'])
+        order.set_status('complete')
+
+        return order_schema.dump(order)
