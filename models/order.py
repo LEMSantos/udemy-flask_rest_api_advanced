@@ -27,6 +27,18 @@ class OrderModel(db.Model):
 
     items = db.relationship('ItemsInOrder', back_populates='order')
 
+    @property
+    def description(self):
+        """Generates a simple string representing this order, in the format of
+        "5x chair, 2x table"
+        """
+        item_counts = [f'{i.quantity}x {i.item.name}' for i in self.items]
+        return ', '.join(item_counts)
+
+    @property
+    def amount(self):
+        return int(sum([i.item.price * i.quantity for i in self.items]) * 100)
+
     @classmethod
     def find_all(cls) -> List['OrderModel']:
         return cls.query.all()
