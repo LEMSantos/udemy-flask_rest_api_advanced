@@ -13,6 +13,10 @@ order_schema = OrderSchema()
 
 class Order(Resource):
     @classmethod
+    def get(cls):
+        return order_schema.dump(OrderModel.find_all(), many=True)
+
+    @classmethod
     def post(cls):
         """Expect a token and a list of item ids from the request body.
         Construct an order and talk to the Strip API to make a charge.
@@ -38,11 +42,11 @@ class Order(Resource):
         order.save_to_db()  # this does not submit to Stripe
 
         try:
-        order.set_status('failed')
-        order.charge_with_stripe(data['token'])
-        order.set_status('complete')
+            order.set_status('failed')
+            order.charge_with_stripe(data['token'])
+            order.set_status('complete')
 
-        return order_schema.dump(order)
+            return order_schema.dump(order)
         except error.CardError as e:
             return e.json_body, e.http_status
         except error.RateLimitError as e:
