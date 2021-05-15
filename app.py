@@ -25,6 +25,7 @@ from resources.store import Store, StoreList
 from resources.confirmation import Confirmation, ConfirmationByUser
 from resources.image import ImageUpload, Image, AvatarUpload, Avatar
 from resources.github_login import GithubLogin, GithubAuthorize
+from resources.order import Order
 from libs.image_helper import IMAGE_SET
 
 app = Flask(__name__)
@@ -75,6 +76,7 @@ api.add_resource(
     GithubAuthorize, '/login/github/authorized', endpoint='github.authorize'
 )
 api.add_resource(SetPassword, '/user/password')
+api.add_resource(Order, '/order')
 
 db.init_app(app)
 ma.init_app(app)
