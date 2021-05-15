@@ -34,5 +34,6 @@
   "avatar_uploaded": "Avatar '{basename}' uploaded.",
   "avatar_not_found": "Avatar not found.",
   "user_password_updated": "User password updated successfully.",
-  "order_item_by_id_not_found": "An item <id={id}> in this order cannot be found."
+  "order_item_by_id_not_found": "An item <id={id}> in this order cannot be found.",
+  "order_error": "An error ocurred while creating a order"
 }
