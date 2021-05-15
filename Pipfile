@@ -19,6 +19,7 @@ werkzeug = "==0.16.0"
 psycopg2 = "==2.8.6"
 flask-migrate = "==2.7.0"
 flask-oauthlib = "==0.9.6"
+stripe = "==2.56.0"
 
 [dev-packages]
 
